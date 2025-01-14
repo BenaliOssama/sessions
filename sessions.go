@@ -15,7 +15,7 @@ type Session struct {
 	Token    string
 	DB       *sql.DB
 	mu       sync.Mutex
-	Data     map[string]interface{} // Store session data as key-value pairs
+	Data     map[string]any // Store session data as key-value pairs
 	Lifetime time.Duration
 	Cookie   struct {
 		Name string
@@ -25,7 +25,7 @@ type Session struct {
 
 func New() *Session {
 	return &Session{
-		Data: make(map[string]interface{}),
+		Data: make(map[string]any),
 	}
 }
 
@@ -35,7 +35,7 @@ func UniqueID(s *Session) {
 }
 
 // Put adds a key-value pair to the session data.
-func (s *Session) Put(key string, value interface{}) {
+func (s *Session) Put(key string, value any) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.Data[key] = value
