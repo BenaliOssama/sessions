@@ -120,3 +120,23 @@ func (s *Session) Send(w http.ResponseWriter) {
 	}
 	http.SetCookie(w, cookie)
 }
+
+// PopString retrieves the value for the given key and deletes it from the session.
+// If the key does not exist, it returns an empty string.
+func (s *Session) PopString(key string) string {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	// Retrieve and remove the key from the map
+	if value, exists := s.Data[key]; exists {
+		delete(s.Data, key)
+
+		// Convert value to string and return
+		if strValue, ok := value.(string); ok {
+			return strValue
+		}
+	}
+
+	// Return empty string if key is missing or not a string
+	return ""
+}
